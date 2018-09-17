@@ -1,0 +1,32 @@
+{
+    "name": "weasy/doc",
+    "description": "weasy comment doc package",
+    "keywords": ["weasy", "comment doc", "laravel"],
+    "type": "library",
+    "authors": [
+        {
+            "name": "guhao022",
+            "email": "378999587@qq.com"
+        }
+    ],
+
+    "require": {
+        "guzzlehttp/guzzle": "^6.3@dev"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "Weasy\\Doc\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Weasy\\Doc\\DocServiceProvider"
+            ]
+        }
+    },
+
+    "minimum-stability": "dev",
+    "version": "1.0.0"
+}
