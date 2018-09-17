@@ -176,11 +176,10 @@
                         </div>
                     </div>
 
-
                     <div class="bs-callout bs-callout-info">
                         <h3 class="color1">Params : </h3>
-                        @if (isset($comment['comment']['param']))
-                            @foreach ($comment['comment']['param'] as $param)
+                        @if (isset($comment['param']))
+                            @foreach ($comment['param'] as $param)
                                 <div class="form-group">
 
                                     <label class="col-md-2 control-label">{{$param["name"]}}: <br /><code>{{$param['type']}}</code></label>
@@ -289,12 +288,6 @@
         $.ajax({
             type: "POST",
             url: "{{ request()->root() }}/doc/test",
-            @if(!empty($access_token))
-            headers: {
-                Accept: "application/json; charset=utf-8",
-                Authorization: "{{$access_token["access_token"]}}"
-            },
-            @endif
             data: d,
             success: function (data, statusText, xhr) {
                 console.log(data)
