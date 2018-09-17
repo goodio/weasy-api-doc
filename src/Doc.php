@@ -17,7 +17,7 @@ class Doc
     private $method = [];
     private $doc = "[toc]\n\n## 接口文档\n\n> * 服务器 ： http://192.168.0.51 \n> * 端口 ： 80\n\n";
 
-    private $comm = ["name", "author", "method", "uri", "param", "response"];
+    private $comm = ["name", "author", "authorization", "method", "uri", "param", "response"];
 
     public function __construct(){}
 
@@ -90,6 +90,12 @@ class Doc
                 $parr[$k]['note'] = $arr[2];
             } else {
                 $parr[$k]['note'] = '';
+            }
+
+            if (isset($arr[3])) {
+                $parr[$k]['example'] = $arr[3];
+            } else {
+                $parr[$k]['example '] = '';
             }
         }
 

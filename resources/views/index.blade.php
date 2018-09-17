@@ -97,6 +97,11 @@
     $port=config("doc.server.port")
     ?>
 
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <strong>注意：</strong> 文档中带有 <code>Authorization</code> 并且值为 <code>True</code> 的接口在使用时需在 <code>头信息</code> 中添加登录时获取的 <code>访问令牌</code>, 文档中的接口测试已经将 <code>访问令牌</code> 添加到 <code>头信息</code> 中，可直接点击 <code>提交</code> 按钮
+        </div>
+
         @foreach($doc as $docc)
             @foreach($docc as $comment)
             <?php $k++ ?>
@@ -113,19 +118,36 @@
             <div class="box" id="test_box_{{$k}}">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-md-1 control-label">Name</label>
+                        <label class="col-md-2 control-label">Name:</label>
                         <div class="col-md-4">
                             <h5><span class="label-info label fs">{{$comment["comment"]["name"]["0"]}}</span></h5>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Authorization:</label>
+                        <div class="col-md-4">
+                            <h5>
+                                @if (!isset($comment["comment"]["authorization"]))
+                                <span class="label-warning label fs">
+                                    False
+                                </span>
+                                @else
+                                <span class="label-danger label fs">
+                                    True
+                                </span>
+                                @endif
+
+                            </h5>
+                        </div>
+                    </div>
 
                     <div class="form-group">
-                        <label class="col-md-1 control-label">Host</label>
+                        <label class="col-md-2 control-label">Host:</label>
                         <div class="col-md-4">
                             <input type="text" id="host_{{$k}}"  class="form-control auth-field" value="{{$host}}">
                         </div>
 
-                        <label class="col-md-1 control-label">Port</label>
+                        <label class="col-md-1 control-label">Port:</label>
                         <div class="col-md-2">
                             <input type="text" id="port_{{$k}}"  class="form-control auth-field" value="{{$port}}">
                         </div>
@@ -133,12 +155,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="col-md-1 control-label">Uri</label>
+                        <label class="col-md-2 control-label">Uri:</label>
                         <div class="col-md-4">
                             <input type="text" disabled id="uri_{{$k}}" class="form-control auth-field" value="{{$comment["comment"]["uri"]["0"]}}">
                         </div>
 
-                        <label class="col-md-1 control-label">Method</label>
+                        <label class="col-md-1 control-label">Method:</label>
                         <div class="col-md-2">
                             <input type="text" disabled id="method_{{$k}}" class="form-control auth-field" value="{{strtoupper($comment["comment"]["method"]["0"])}}">
                         </div>
@@ -151,9 +173,9 @@
                             @foreach ($comment['comment']['param'] as $param)
                                 <div class="form-group">
 
-                                    <label class="col-md-2 control-label">{{$param["name"]}} <br /><code>{{$param['type']}}</code></label>
+                                    <label class="col-md-2 control-label">{{$param["name"]}}: <br /><code>{{$param['type']}}</code></label>
                                     <div class="col-md-4">
-                                        <input type="text" id="{{$param['name']}}_{{$k}}" name="{{$param['name']}}" placeholder="{{$param['note']}}" class="form-control auth-field">
+                                        <input type="text" id="{{$param['name']}}_{{$k}}" name="{{$param['name']}}" placeholder="{{$param['note']}}" @if(isset($param['example']))value="{{$param['example']}}" @endif class="form-control auth-field">
                                     </div>
 
                                 </div>
@@ -168,7 +190,7 @@
                     <div class="bs-callout bs-callout-danger">
                         <h3 class="color1">Response : </h3>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">Status</label>
+                            <label class="col-md-2 control-label">Status:</label>
                             <div class="col-md-4">
                                 <input type="text" disabled placeholder="返回的HTTP状态码" id="status_{{$k}}" class="form-control auth-field">
                             </div>
@@ -176,7 +198,7 @@
 
 
                         <div class="form-group">
-                            <label class="col-md-2 control-label">Data</label>
+                            <label class="col-md-2 control-label">Data:</label>
                             <div class="col-md-9">
                                 <textarea id="data_{{$k}}" rows="9" class="form-control auth-field"></textarea>
                             </div>
@@ -233,14 +255,6 @@
         $("#test_box_"+t).toggle();
     }
 
-    function getUrl(t){
-        var host = "http://" + $("#host_"+t).val();
-        var port = $("#port_"+t).val();
-        var uri = $("#uri_"+t).val();
-        var url = host+":"+port+uri;
-        return url;
-    }
-
     function test(t){
         var uri = $("#uri_"+t).val();
         var method = $("#method_"+t).val();
@@ -265,7 +279,12 @@
         $.ajax({
             type: "POST",
             url: "{{ request()->root() }}/doc/test",
-            //asyc: true,
+            @if(!empty($access_token))
+            headers: {
+                Accept: "application/json; charset=utf-8",
+                Authorization: "{{$access_token["access_token"]}}"
+            },
+            @endif
             data: d,
             success: function (data, statusText, xhr) {
                 console.log(data)
@@ -275,9 +294,9 @@
             },
             error: function (xhr) {
 
-                /*$("#status_"+t).val(xhr.status);
-                //$("#data_"+t).val(JSON.stringify(xhr.responseJSON, null, "\t"));
-                $("#data_"+t).val(xhr.responseJSON);*/
+                $("#status_"+t).val(xhr.status);
+                $("#data_"+t).val(JSON.stringify(xhr.responseJSON, null, "\t"));
+                //$("#data_"+t).val(xhr.responseJSON);
                 console.log(xhr);
             },
             dataType: "json"

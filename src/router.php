@@ -6,31 +6,28 @@ Route::group([
 
     Route::get('doc/api', function (){
 
+        $access_token = cache("api_access_token");
+
         $filepath = storage_path()."/doc/doc.json";
         $json = file_get_contents($filepath);
-        $array = json_decode($json, true);
+        $doc = json_decode($json, true);
 
-        return view("doc::index", ['doc' => $array]);
+        return view("doc::index", compact('doc', 'access_token'));
     });
 
     Route::post('doc/test', function (){
         $params = request()->all();
 
-        $host = $params["_host"];
         $uri = $params["_uri"];
         $method = $params["_method"];
-        $port = $params["_port"];
+
         unset($params["_uri"], $params["_method"], $params["_host"], $params["_port"], $params["_token"]);
 
-        $header = [];
+        request()->request->add($params);
 
-        $client = new \GuzzleHttp\Client(['base_uri' => $host.":".$port]);
-        $responce = $client->request($method, $uri,
-            [
-                'headers' => $header,
-                'form_params' => $params,
-            ]);
-        return $responce->getBody()->getContents();
+        $proxy = request()->create($uri, $method);
+
+        return Route::dispatch($proxy);
     });
 
 });
