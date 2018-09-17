@@ -28,14 +28,13 @@ Route::group([
 
         $request = request()->create($uri, $method);
 
-        $request->headers->set('Accept', "application/json");
-        $request->headers->set('X-CSRF-TOKEN', "window.Laravel.csrfToken");
+        /*$request->headers->set('Accept', "application/json");
 
         $access_token = cache("api_access_token");
 
         if(!empty($access_token)){
             $request->headers->set("Authorization", "Bearer ".$access_token["access_token"]);
-        }
+        }*/
 
         //print_r($request);die;
 
