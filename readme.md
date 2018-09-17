@@ -1,18 +1,38 @@
-# 扫糖网接口代理模块
+# 注释文档模块
 
 ## TODO
 
-- 只代理 `host` ,URI直接转发
-
-## 开发模式安装
-
-把 `Weasy\Proxy\ProxyServiceProvider::class` 添加到 `app.php` 里
-
-迁移配置文件
-```bash
-php artisan vendor:publish --tag=proxy.config
-```
+- 利用php反射生成接口文档
+- 接口测试页面
+- 需生成文档的控制器可配置
 
 ## 使用
 
-http://host/v1/snc/apiuri
+1. 迁移配置文件
+```php
+php artisan vendor:publish --tag=doc.config
+```
+
+2. 打开 `config/doc.php` 文件进行配置
+```php
+return [
+    // 接口服务器配置
+    "server" => [
+        "host" => "192.168.0.51",
+        "port" => 80
+    ],
+
+    // 需生成文档的控制器
+    "handler" => [
+        ...
+        Weasy\User\Api\AuthApi::class,
+    ]
+];
+```
+
+3. 生成文档
+```php
+php artisan doc:generate
+```
+
+文档保存在 `storage/doc/doc.json` 中
