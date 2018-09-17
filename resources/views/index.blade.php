@@ -102,16 +102,26 @@
             <strong>注意：</strong> 文档中带有 <code>Authorization</code> 并且值为 <code>True</code> 的接口在使用时需在 <code>头信息</code> 中添加登录时获取的 <code>访问令牌</code>, 文档中的接口测试已经将 <code>访问令牌</code> 添加到 <code>头信息</code> 中，可直接点击 <code>提交</code> 按钮
         </div>
 
-        @foreach($doc as $docc)
-            @foreach($docc as $comment)
-            <?php $k++ ?>
-            <h3 class="main_title" onclick="showBox({{$k}})"><code> <i class="glyphicon glyphicon-send"></i> {{$comment["comment"]["name"]["0"]}}</code></h3>
+        @foreach($doc as $ck => $class)
+
+            <h2 id="doc{{$ck}}" class="page-header">
+                <a href="#doc{{$ck}}"><i class="glyphicon glyphicon-send"></i></a>
+                @if(isset($class['comment']['name'])){{$class['comment']['name']}}@endif
+                <small>@if(isset($class['comment']['description'])){{$class['comment']['description']}}@endif</small>
+            </h2>
+
+            @foreach($class["action"] as $comment)
+
+            <?php $k++; ?>
+                @if (empty($comment["name"]["0"])) @continue @endif
+                @if (empty($comment["uri"]["0"])) @continue @endif
+            <h3 class="main_title" onclick="showBox({{$k}})"><code> {{$comment["name"]["0"]}}</code></h3>
 
             <div class="sider" onclick="showBox({{$k}})" >
-                <div class="method pull-left">{{strtoupper($comment["comment"]["method"]["0"])}}</div>
+                <div class="method pull-left">{{strtoupper($comment["method"]["0"])}}</div>
                 <div class="uri">
-                    <div class="pull-right">【{{$comment["comment"]["name"]["0"]}}】</div>
-                    <div class="pull-left">http://{{$host}}:{{$port}}{{$comment["comment"]["uri"]["0"]}}</div>
+                    <div class="pull-right">【{{$comment["name"]["0"]}}】</div>
+                    <div class="pull-left">http://{{$host}}:{{$port}}{{$comment["uri"]["0"]}}</div>
                 </div>
                 <div class="clearfix"></div>
             </div>
@@ -120,20 +130,20 @@
                     <div class="form-group">
                         <label class="col-md-2 control-label">Name:</label>
                         <div class="col-md-4">
-                            <h5><span class="label-info label fs">{{$comment["comment"]["name"]["0"]}}</span></h5>
+                            <h5><span class="label-info label fs">{{$comment["name"]["0"]}}</span></h5>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">Authorization:</label>
                         <div class="col-md-4">
                             <h5>
-                                @if (!isset($comment["comment"]["authorization"]))
+                                @if ($comment["authorization"])
                                 <span class="label-warning label fs">
-                                    False
+                                    FALSE
                                 </span>
                                 @else
                                 <span class="label-danger label fs">
-                                    True
+                                    TRUE
                                 </span>
                                 @endif
 
@@ -157,12 +167,12 @@
                     <div class="form-group">
                         <label class="col-md-2 control-label">Uri:</label>
                         <div class="col-md-4">
-                            <input type="text" disabled id="uri_{{$k}}" class="form-control auth-field" value="{{$comment["comment"]["uri"]["0"]}}">
+                            <input type="text" disabled id="uri_{{$k}}" class="form-control auth-field" value="{{$comment["uri"]["0"]}}">
                         </div>
 
                         <label class="col-md-1 control-label">Method:</label>
                         <div class="col-md-2">
-                            <input type="text" disabled id="method_{{$k}}" class="form-control auth-field" value="{{strtoupper($comment["comment"]["method"]["0"])}}">
+                            <input type="text" disabled id="method_{{$k}}" class="form-control auth-field" value="{{strtoupper($comment["method"]["0"])}}">
                         </div>
                     </div>
 
@@ -180,7 +190,7 @@
 
                                 </div>
                             @endforeach
-                            <input type="hidden" id="params_{{$k}}" value='{{json_encode($comment["comment"]["param"])}}'>
+                            <input type="hidden" id="params_{{$k}}" value='{{json_encode($comment["param"])}}'>
 
                         @endif
 
@@ -204,7 +214,7 @@
                             </div>
                         </div>
 
-                        @if (isset($comment["comment"]["response"]))
+                        @if (isset($comment["response"]))
                         <div class="form-group">
                             <label class="col-md-2 control-label"></label>
                             <div class="col-md-9">
@@ -218,7 +228,7 @@
                                     </thead>
                                     <tbody>
 
-                                    @foreach ($comment["comment"]["response"] as $res)
+                                    @foreach ($comment["response"] as $res)
 
                                         <tr>
                                             <td><span class="label label-success">{{$res['name']}}</span></td>

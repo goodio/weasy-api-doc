@@ -10,6 +10,9 @@ Route::group([
 
         $filepath = storage_path()."/doc/doc.json";
         $json = file_get_contents($filepath);
+
+        //print_r($json);die;
+
         $doc = json_decode($json, true);
 
         return view("doc::index", compact('doc', 'access_token'));

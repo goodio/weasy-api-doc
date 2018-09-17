@@ -7,5 +7,6 @@ return [
 
     "handler" => [
         Weasy\User\Api\AuthApi::class,
+        Weasy\User\Api\UserApi::class,
     ]
 ];

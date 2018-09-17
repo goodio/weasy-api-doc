@@ -17,7 +17,7 @@ class Doc
     private $method = [];
     private $doc = "[toc]\n\n## 接口文档\n\n> * 服务器 ： http://192.168.0.51 \n> * 端口 ： 80\n\n";
 
-    private $comm = ["name", "author", "authorization", "method", "uri", "param", "response"];
+    private $comm = ["name", "author", "authorization", "method", "uri", "param", "response", "description"];
 
     public function __construct(){}
 
@@ -37,11 +37,13 @@ class Doc
             $methods = $class->getMethods(\ReflectionProperty::IS_PUBLIC);
 
             $method = [];
+
             foreach($methods as $m){
 
                 if($m->class == $val && $m->name != "__construct"){
                     $comment = $m->getDocComment();
                     $classComment = $class->getDocComment();
+
                     $method["class"] = $m->class;
                     $method["comment"] = $classComment;
                     $method[] = [
@@ -51,7 +53,6 @@ class Doc
                 }
             }
             $this->method[] = $method;
-            //print_r($method);
         }
         return $this->method;
     }
@@ -116,25 +117,40 @@ class Doc
     private function comment(){
         $methods = $this->methods();
         $comment_doc = [];
-        foreach($methods as $m){
+        foreach($methods as $k => $m){
 
             $doc = [];
             if(!empty($m["comment"])){
-                $m_comment = $this->matchComment($m["comment"]);
+                $m_comment[$k] = $this->matchComment($m["comment"], ["name", "description"]);
             }
 
-            if(isset($m_comment["name"])){
-                $doc["class_name"] = $m_comment["name"];
+            if(isset($m_comment[$k]["name"])){
+                $doc['comment'] = [
+                    "name" => $m_comment[$k]["name"][0],
+                    "description" => $m_comment[$k]["description"][0]
+                ];
             }
 
             $comment = [];
+
             foreach($m as $method){
 
                 if(is_array($method)){
                     $comment = $this->matchComment($method["comment"],$this->comm);
-                    if (!isset($comment['name'])) {
-                        continue;
-                    }
+                }
+
+                if (!isset($comment['name'])) {
+                    continue;
+                }
+
+                if (!isset($comment['uri'])) {
+                    continue;
+                }
+
+                if (!empty($comment["authorization"][0])) {
+                    $comment["authorization"][0] = boolval($comment["authorization"][0]);
+                } else {
+                    $comment["authorization"][0] = false;
                 }
 
                 if (!empty($comment["param"])) {
@@ -146,7 +162,7 @@ class Doc
                 }
 
                 if(!empty($comment)){
-                    $doc[] = ["comment" => $comment];
+                    $doc['action'][] = $comment;
                 }
             }
 
@@ -161,6 +177,9 @@ class Doc
     //解析comment成json
     public function json(){
         $comment = $this->comment();
+
+        //print_r($comment);die;
+
         $json = json_encode($comment);
 
         $this->createFile($json,"doc.json");
