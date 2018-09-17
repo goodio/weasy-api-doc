@@ -288,12 +288,13 @@
         $.ajax({
             type: "POST",
             url: "{{ request()->root() }}/doc/test",
+            headers: {
+                'Accept': "application/json",
 
-            beforeSend: function (XMLHttpRequest) {
-                XMLHttpRequest.setRequestHeader("Accept", "application/json");
                 @if(!empty($access_token))
-                XMLHttpRequest.setRequestHeader("Authorization", "{{$access_token['access_token']}}");
+                'Authorization': "Bearer {{$access_token['access_token']}}"
                 @endif
+
             },
             data: d,
             success: function (data, statusText, xhr) {

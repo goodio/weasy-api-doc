@@ -9,9 +9,9 @@ Route::group([
         $filepath = storage_path()."/doc/doc.json";
         $json = file_get_contents($filepath);
 
-        //print_r($json);die;
-
         $doc = json_decode($json, true);
+
+        $access_token = cache("api_access_token");
 
         return view("doc::index", compact('doc', 'access_token'));
     });
@@ -27,16 +27,6 @@ Route::group([
         request()->request->add($params);
 
         $request = request()->create($uri, $method);
-
-        /*$request->headers->set('Accept', "application/json");
-
-        $access_token = cache("api_access_token");
-
-        if(!empty($access_token)){
-            $request->headers->set("Authorization", "Bearer ".$access_token["access_token"]);
-        }*/
-
-        //print_r($request);die;
 
         return Route::dispatch($request);
     });
