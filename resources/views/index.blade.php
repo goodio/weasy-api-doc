@@ -167,7 +167,7 @@
                     <div class="form-group">
                         <label class="col-md-2 control-label">Uri:</label>
                         <div class="col-md-4">
-                            <input type="text" disabled id="uri_{{$k}}" class="form-control auth-field" value="{{$comment["uri"]["0"]}}">
+                            <input type="text" id="uri_{{$k}}" class="form-control auth-field" value="{{$comment["uri"]["0"]}}">
                         </div>
 
                         <label class="col-md-1 control-label">Method:</label>
