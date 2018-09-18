@@ -308,7 +308,7 @@
             headers: {
                 'Accept': "application/json",
 
-                @if(!empty($access_token))
+                @if(isset($access_token['access_token']))
                 'Authorization': "Bearer {{$access_token['access_token']}}"
                 @endif
 
