@@ -103,155 +103,172 @@
         </div>
 
         @foreach($doc as $ck => $class)
-
-            <h2 id="doc{{$ck}}" class="page-header">
-                <a href="#doc{{$ck}}"><i class="glyphicon glyphicon-send"></i></a>
+            <h2 id="doc_{{$ck}}" class="page-header">
+                <a href="#doc_{{$ck}}"><i class="glyphicon glyphicon-send"></i></a>
                 @if(isset($class['comment']['name'])){{$class['comment']['name']}}@endif
                 <small>@if(isset($class['comment']['description'])){{$class['comment']['description']}}@endif</small>
             </h2>
 
             @foreach($class["action"] as $comment)
 
-            <?php $k++; ?>
+                <?php $k++; ?>
                 @if (empty($comment["name"]["0"])) @continue @endif
                 @if (empty($comment["uri"]["0"])) @continue @endif
-            <h3 class="main_title" onclick="showBox({{$k}})"><code> {{$comment["name"]["0"]}}</code></h3>
+                <h3 class="main_title" onclick="showBox({{$k}})"><code> {{$comment["name"]["0"]}}</code></h3>
 
-            <div class="sider" onclick="showBox({{$k}})" >
-                <div class="method pull-left">{{strtoupper($comment["method"]["0"])}}</div>
-                <div class="uri">
-                    <div class="pull-right">【{{$comment["name"]["0"]}}】</div>
-                    <div class="pull-left">http://{{$host}}:{{$port}}{{$comment["uri"]["0"]}}</div>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-            <div class="box" id="test_box_{{$k}}">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">Name:</label>
-                        <div class="col-md-4">
-                            <h5><span class="label-info label fs">{{$comment["name"]["0"]}}</span></h5>
-                        </div>
+                <div class="sider" id="" onclick="showBox({{$k}})" >
+                    <div class="method pull-left">{{strtoupper($comment["method"]["0"])}}</div>
+                    <div class="uri">
+                        <div class="pull-right">【{{$comment["name"]["0"]}}】</div>
+                        <div class="pull-left">http://{{$host}}:{{$port}}{{$comment["uri"]["0"]}}</div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">Authorization:</label>
-                        <div class="col-md-4">
-                            <h5>
-                                @if ($comment["authorization"])
-                                <span class="label-warning label fs">
-                                    FALSE
-                                </span>
-                                @else
-                                <span class="label-danger label fs">
-                                    TRUE
-                                </span>
+                    <div class="clearfix"></div>
+                </div>
+                    <div class="box" id="test_box_{{$k}}">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Name:</label>
+                                <div class="col-md-3">
+                                    <h5><span class="label-info label fs">{{$comment["name"]["0"]}}</span></h5>
+                                </div>
+
+                                <label class="col-md-2 control-label">Author:</label>
+                                <div class="col-md-3">
+                                    <h5>
+                                        @foreach($comment["author"] as $author)
+                                            <span class="label-success label fs">{{$author}}</span> &nbsp;
+                                        @endforeach
+                                    </h5>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Authorization:</label>
+                                <div class="col-md-4">
+                                    <h5>
+
+                                        <span class="label-danger label fs">
+                                            {{ strtoupper($comment["authorization"]) }}
+                                        </span>
+
+                                    </h5>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Host:</label>
+                                <div class="col-md-4">
+                                    <input type="text" id="host_{{$k}}"  class="form-control auth-field" value="{{$host}}">
+                                </div>
+
+                                <label class="col-md-1 control-label">Port:</label>
+                                <div class="col-md-2">
+                                    <input type="text" id="port_{{$k}}"  class="form-control auth-field" value="{{$port}}">
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Uri:</label>
+                                <div class="col-md-4">
+                                    <input type="text" id="uri_{{$k}}" class="form-control auth-field" value="{{$comment["uri"]["0"]}}">
+                                </div>
+
+                                <label class="col-md-1 control-label">Method:</label>
+                                <div class="col-md-2">
+                                    <input type="text" disabled id="method_{{$k}}" class="form-control auth-field" value="{{strtoupper($comment["method"]["0"])}}">
+                                </div>
+                            </div>
+
+                            @if (isset($comment['description']))
+                                <div class="alert alert-{{$comment['description']['level']}} alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <strong><i class="glyphicon glyphicon-exclamation-sign"></i></strong> &nbsp;
+                                    {!! $comment['description']["note"] !!}
+                                </div>
+                            @endif
+
+                            <div class="bs-callout bs-callout-info">
+                                <h3 class="color1">Params : </h3>
+                                @if (isset($comment['param']))
+                                    @foreach ($comment['param'] as $param)
+                                        <div class="form-group">
+
+                                            <label class="col-md-2 control-label">{{$param["name"]}}: <br /><code>{{$param['type']}}</code></label>
+                                            <div class="col-md-4">
+                                                @if($param['type'] == "file")
+                                                    <input type="file" id="{{$param['name']}}_{{$k}}" name="{{$param['name']}}">
+                                                @else
+                                                    <input type="text" id="{{$param['name']}}_{{$k}}" name="{{$param['name']}}" placeholder="{{$param['note']}}" @if(isset($param['example']))value="{{$param['example']}}" @endif class="form-control auth-field">
+                                                @endif
+
+                                            </div>
+
+                                        </div>
+                                    @endforeach
+                                    <input type="hidden" id="params_{{$k}}" value='{{json_encode($comment["param"])}}'>
+
                                 @endif
 
-                            </h5>
-                        </div>
-                    </div>
+                                <button type="button" onclick="test({{$k}})" class="btn btn-primary col-sm-offset-1"> 提交 </button>
+                            </div>
 
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">Host:</label>
-                        <div class="col-md-4">
-                            <input type="text" id="host_{{$k}}"  class="form-control auth-field" value="{{$host}}">
-                        </div>
-
-                        <label class="col-md-1 control-label">Port:</label>
-                        <div class="col-md-2">
-                            <input type="text" id="port_{{$k}}"  class="form-control auth-field" value="{{$port}}">
-                        </div>
-
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">Uri:</label>
-                        <div class="col-md-4">
-                            <input type="text" id="uri_{{$k}}" class="form-control auth-field" value="{{$comment["uri"]["0"]}}">
-                        </div>
-
-                        <label class="col-md-1 control-label">Method:</label>
-                        <div class="col-md-2">
-                            <input type="text" disabled id="method_{{$k}}" class="form-control auth-field" value="{{strtoupper($comment["method"]["0"])}}">
-                        </div>
-                    </div>
-
-                    <div class="bs-callout bs-callout-info">
-                        <h3 class="color1">Params : </h3>
-                        @if (isset($comment['param']))
-                            @foreach ($comment['param'] as $param)
+                            <div class="bs-callout bs-callout-danger">
+                                <h3 class="color1">Response : </h3>
                                 <div class="form-group">
-
-                                    <label class="col-md-2 control-label">{{$param["name"]}}: <br /><code>{{$param['type']}}</code></label>
+                                    <label class="col-md-2 control-label">Status:</label>
                                     <div class="col-md-4">
-                                        <input type="text" id="{{$param['name']}}_{{$k}}" name="{{$param['name']}}" placeholder="{{$param['note']}}" @if(isset($param['example']))value="{{$param['example']}}" @endif class="form-control auth-field">
+                                        <input type="text" disabled placeholder="返回的HTTP状态码" id="status_{{$k}}" class="form-control auth-field">
                                     </div>
-
                                 </div>
-                            @endforeach
-                            <input type="hidden" id="params_{{$k}}" value='{{json_encode($comment["param"])}}'>
 
-                        @endif
 
-                        <button type="button" onclick="test({{$k}})" class="btn btn-primary col-sm-offset-1"> 提交 </button>
-                    </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">Data:</label>
+                                    <div class="col-md-9">
+                                        <textarea id="data_{{$k}}" rows="9" class="form-control auth-field"></textarea>
+                                    </div>
+                                </div>
 
-                    <div class="bs-callout bs-callout-danger">
-                        <h3 class="color1">Response : </h3>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Status:</label>
-                            <div class="col-md-4">
-                                <input type="text" disabled placeholder="返回的HTTP状态码" id="status_{{$k}}" class="form-control auth-field">
+                                @if (isset($comment["response"]))
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label"></label>
+                                        <div class="col-md-9">
+                                            <table class="table table-bordered table-hover table-responsive">
+                                                <thead>
+                                                <tr>
+                                                    <th>参数名称</th>
+                                                    <th>参数类型</th>
+                                                    <th class="center">备注信息</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                @foreach ($comment["response"] as $res)
+
+                                                    <tr>
+                                                        <td><span class="label label-success">{{$res['name']}}</span></td>
+                                                        <td>{{$res['type']}}</td>
+                                                        <td class="text-center text-danger">{{$res['note']}}</td>
+                                                    </tr>
+
+                                                @endforeach
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                @endif
+
                             </div>
-                        </div>
 
 
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Data:</label>
-                            <div class="col-md-9">
-                                <textarea id="data_{{$k}}" rows="9" class="form-control auth-field"></textarea>
-                            </div>
-                        </div>
+                        </form>
 
-                        @if (isset($comment["response"]))
-                        <div class="form-group">
-                            <label class="col-md-2 control-label"></label>
-                            <div class="col-md-9">
-                                <table class="table table-bordered table-hover table-responsive">
-                                    <thead>
-                                    <tr>
-                                        <th>参数名称</th>
-                                        <th>参数类型</th>
-                                        <th class="center">备注信息</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    @foreach ($comment["response"] as $res)
-
-                                        <tr>
-                                            <td><span class="label label-success">{{$res['name']}}</span></td>
-                                            <td>{{$res['type']}}</td>
-                                            <td class="text-center text-danger">{{$res['note']}}</td>
-                                        </tr>
-
-                                    @endforeach
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        @endif
 
                     </div>
-
-
-                </form>
-
-
-            </div>
-            <div class="clearfix"></div>
-            <br>
+                <div class="clearfix"></div>
+                <br>
 
         @endforeach
     @endforeach
@@ -296,6 +313,7 @@
                 @endif
 
             },
+
             data: d,
             success: function (data, statusText, xhr) {
                 console.log(data)

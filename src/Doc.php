@@ -73,8 +73,9 @@ class Doc
 
     private function matchParam($params) {
 
+        $parr = [];
         foreach ($params as $k => $param) {
-            $arr = explode(' ',$param);
+            $arr = explode(' ', $param, 4);
             if (isset($arr[0])) {
                 $parr[$k]['name'] = $arr[0];
             } else {
@@ -147,10 +148,30 @@ class Doc
                     continue;
                 }
 
+                if (isset($comment['description'])) {
+                    $desc = $comment['description'][0];
+                    $arr = explode(' ', $desc, 2);
+
+                    $parr = [];
+
+                    if (isset($arr[0]) && in_array($arr[0],["default", "primary", "success", "info", "warning", "danger"])) {
+                        $parr['level'] = $arr[0];
+                    } else {
+                        $parr['level'] = "default";
+                    }
+                    if (isset($arr[1])) {
+                        $parr['note'] = $arr[1];
+                    } else {
+                        unset($parr);
+                    }
+
+                    $comment['description'] = $parr;
+                }
+
                 if (!empty($comment["authorization"][0])) {
-                    $comment["authorization"][0] = boolval($comment["authorization"][0]);
+                    $comment["authorization"] = $comment["authorization"][0];
                 } else {
-                    $comment["authorization"][0] = false;
+                    $comment["authorization"] = "false";
                 }
 
                 if (!empty($comment["param"])) {
