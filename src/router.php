@@ -19,14 +19,14 @@ Route::group([
     Route::post('doc/test', function (){
         $params = request()->all();
 
+        print_r($params);die;
+
         $uri = $params["_uri"];
         $method = $params["_method"];
 
         unset($params["_uri"], $params["_method"], $params["_host"], $params["_port"], $params["_token"]);
 
         request()->request->add($params);
-
-        print_r($uri);die;
 
         $request = request()->create($uri, $method);
 

@@ -176,7 +176,7 @@
 
                                 <label class="col-md-1 control-label">Method:</label>
                                 <div class="col-md-2">
-                                    <input type="text" disabled id="method_{{$k}}" class="form-control auth-field" value="{{strtoupper($comment["method"]["0"])}}">
+                                    <input type="text" disabled id="_method_{{$k}}" class="form-control auth-field" value="{{strtoupper($comment["method"]["0"])}}">
                                 </div>
                             </div>
 
@@ -283,14 +283,13 @@
 
     function test(t){
         var uri = $("#uri_"+t).val();
-        var method = $("#method_"+t).val();
+        var method = $("#_method_"+t).val();
         var params = $("#params_"+t).val();
 
         var d = {};
         if (typeof(params) != "undefined") {
             $(JSON.parse(params)).each(function(i,v){
                 d[v.name] = $("#"+v.name+"_"+t).val();
-
             });
         }
 
@@ -300,7 +299,7 @@
         d["_uri"] = uri;
         d["_method"] = method;
 
-        console.log(d);
+        //console.log(d);
 
         $.ajax({
             type: "POST",
