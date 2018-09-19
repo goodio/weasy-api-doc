@@ -11,6 +11,6 @@ return [
         Weasy\Proxy\ApiController::class,
 
         // 内容接口
-        Weasy\Stcms\Controllers\ApiController::class,
+        //Weasy\Stcms\Controllers\ApiController::class,
     ]
 ];
