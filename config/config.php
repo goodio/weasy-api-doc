@@ -8,5 +8,8 @@ return [
     "handler" => [
         Weasy\User\Api\AuthApi::class,
         Weasy\User\Api\UserApi::class,
+
+        // 内容接口
+        Weasy\Stcms\Controllers\ApiController::class,
     ]
 ];
