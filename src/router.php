@@ -26,6 +26,8 @@ Route::group([
 
         request()->request->add($params);
 
+        print_r($uri);die;
+
         $request = request()->create($uri, $method);
 
         return Route::dispatch($request);
