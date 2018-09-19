@@ -19,8 +19,6 @@ Route::group([
     Route::post('doc/test', function (){
         $params = request()->all();
 
-        print_r($params);die;
-
         $uri = $params["_uri"];
         $method = $params["_method"];
 

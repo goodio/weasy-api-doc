@@ -299,7 +299,7 @@
         d["_uri"] = uri;
         d["_method"] = method;
 
-        //console.log(d);
+        console.log(d);
 
         $.ajax({
             type: "POST",
