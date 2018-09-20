@@ -127,7 +127,12 @@ class Doc
 
             if(isset($m_comment[$k]["name"])){
                 $doc['comment'] = [
-                    "name" => $m_comment[$k]["name"][0],
+                    "name" => $m_comment[$k]["name"][0]
+                ];
+            }
+
+            if(isset($m_comment[$k]["description"])){
+                $doc['comment'] = [
                     "description" => $m_comment[$k]["description"][0]
                 ];
             }
