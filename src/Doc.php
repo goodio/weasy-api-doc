@@ -126,15 +126,11 @@ class Doc
             }
 
             if(isset($m_comment[$k]["name"])){
-                $doc['comment'] = [
-                    "name" => $m_comment[$k]["name"][0]
-                ];
+                $doc['comment']['name'] = $m_comment[$k]["name"][0];
             }
 
             if(isset($m_comment[$k]["description"])){
-                $doc['comment'] = [
-                    "description" => $m_comment[$k]["description"][0]
-                ];
+                $doc['comment']["description"] = $m_comment[$k]["description"][0];
             }
 
             $comment = [];
