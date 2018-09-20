@@ -20,9 +20,9 @@ Route::group([
         $params = request()->all();
 
         $uri = $params["_uri"];
-        $method = $params["_method"];
+        $method = $params["__method"];
 
-        unset($params["_uri"], $params["_method"], $params["_host"], $params["_port"], $params["_token"]);
+        unset($params["_uri"], $params["__method"], $params["_host"], $params["_port"], $params["_token"]);
 
         request()->request->add($params);
 

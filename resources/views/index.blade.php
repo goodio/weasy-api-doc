@@ -297,7 +297,7 @@
         d["_host"] = "{{$host}}";
         d["_port"] = "{{$port}}";
         d["_uri"] = uri;
-        d["_method"] = method;
+        d["__method"] = method;
 
         console.log(d);
 
