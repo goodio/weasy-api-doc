@@ -4,6 +4,10 @@ Route::group([
     'middleware' => ['web'],
 ], function() {
 
+    Route::get('doc/snc', function (){
+        return view("doc::snc");
+    });
+
     Route::get('doc/api', function (){
 
         $filepath = storage_path()."/doc/doc.json";

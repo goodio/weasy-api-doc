@@ -87,6 +87,23 @@
         cursor: pointer;
     }
 
+    .text-red{color:#dd4b39 !important}
+    .text-yellow{color:#f39c12 !important}
+    .text-aqua{color:#00c0ef !important}
+    .text-blue{color:#0073b7 !important}
+    .text-black{color:#111 !important}
+    .text-light-blue{color:#3c8dbc !important}
+    .text-green{color:#00a65a !important}
+    .text-gray{color:#d2d6de !important}
+    .text-navy{color:#001f3f !important}
+    .text-teal{color:#39cccc !important}
+    .text-olive{color:#3d9970 !important}
+    .text-lime{color:#01ff70 !important}
+    .text-orange{color:#ff851b !important}
+    .text-fuchsia{color:#f012be !important}
+    .text-purple{color:#605ca8 !important}
+    .text-maroon{color:#d81b60 !important}
+
 </style>
 <body>
 
@@ -195,14 +212,16 @@
                                         <div class="form-group">
 
                                             <label class="col-md-2 control-label">{{$param["name"]}}: <br /><code>{{$param['type']}}</code></label>
-                                            <div class="col-md-4">
+                                            <div class="col-md-8">
                                                 @if($param['type'] == "file")
                                                     <input type="file" id="{{$param['name']}}_{{$k}}" name="{{$param['name']}}">
                                                 @else
                                                     <input type="text" id="{{$param['name']}}_{{$k}}" name="{{$param['name']}}" placeholder="{{$param['note']}}" @if(isset($param['example']))value="{{$param['example']}}" @endif class="form-control auth-field">
                                                 @endif
 
-                                                <span class="help-block">{{$param['note']}}</span>
+                                                <span class="help-block text-yellow">
+                                                    {!! $param['note'] !!}
+                                                </span>
 
                                             </div>
 
