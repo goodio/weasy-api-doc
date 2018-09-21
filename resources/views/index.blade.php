@@ -202,6 +202,8 @@
                                                     <input type="text" id="{{$param['name']}}_{{$k}}" name="{{$param['name']}}" placeholder="{{$param['note']}}" @if(isset($param['example']))value="{{$param['example']}}" @endif class="form-control auth-field">
                                                 @endif
 
+                                                <span class="help-block">{{$param['note']}}</span>
+
                                             </div>
 
                                         </div>
