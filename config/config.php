@@ -14,6 +14,10 @@ return [
         Weasy\Mall\Controllers\Api\NavBarApi::class,
         Weasy\Mall\Controllers\Api\GoodsApi::class,
         Weasy\Mall\Controllers\Api\CartApi::class,
+        Weasy\Mall\Controllers\Api\AddressApi::class,
+        Weasy\Mall\Controllers\Api\OrderApi::class,
+        Weasy\Mall\Controllers\Api\BuyStepApi::class,
+        Weasy\Mall\Controllers\Api\PaymentApi::class,
 
         // 内容接口
         //Weasy\Stcms\Controllers\ApiController::class,
