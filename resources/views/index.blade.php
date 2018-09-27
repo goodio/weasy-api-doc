@@ -24,7 +24,6 @@
     .main{
         width: 90%;
         margin: 30px auto;
-        min-width: 960px;
         max-width: 1096px;
     }
 
