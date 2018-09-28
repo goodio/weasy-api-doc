@@ -20,6 +20,8 @@ return [
         Weasy\Mall\Controllers\Api\PaymentApi::class,
 
         // 内容接口
-        //Weasy\Stcms\Controllers\ApiController::class,
+        Weasy\Stcms\Controllers\ApiController::class,
+        Weasy\Video\Controllers\ApiController::class,
+        Weasy\Comment\Controllers\ApiController::class,
     ]
 ];
